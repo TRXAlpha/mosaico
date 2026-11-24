@@ -703,18 +703,10 @@ impl std::ops::DerefMut for HandleWriter {
 #[cfg(test)]
 mod tests {
     use mosaicod_core::{self as core, types::NotificationType};
-    use mosaicod_query as query;
 
     use super::*;
+    use crate::testing::test_context;
     use crate::{sequence, session};
-
-    fn test_context(pool: sqlx::Pool<db::DatabaseType>) -> Context {
-        let database = db::testing::Database::new(pool);
-        let store = store::testing::Store::new_random_on_tmp().unwrap();
-        let ts_gw = Arc::new(query::TimeseriesEngine::try_new((*store).clone(), 0).unwrap());
-
-        Context::new((*store).clone(), (*database).clone(), ts_gw)
-    }
 
     fn dummy_ontology_metadata() -> TopicOntologyMetadata {
         types::TopicOntologyMetadata::new("dummy".to_owned(), types::Format::Default, None)

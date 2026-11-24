@@ -101,20 +101,9 @@ pub async fn delete(context: &Context, handle: Handle) -> Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Arc;
-
-    use mosaicod_query as query;
-    use mosaicod_store as store;
 
     use super::*;
-
-    fn test_context(pool: sqlx::Pool<db::DatabaseType>) -> Context {
-        let database = db::testing::Database::new(pool);
-        let store = store::testing::Store::new_random_on_tmp().unwrap();
-        let ts_gw = Arc::new(query::TimeseriesEngine::try_new((*store).clone(), 0).unwrap());
-
-        Context::new((*store).clone(), (*database).clone(), ts_gw)
-    }
+    use crate::testing::test_context;
 
     #[sqlx::test(migrator = "db::testing::MIGRATOR")]
     async fn auth_policy_create_and_delete(pool: sqlx::Pool<db::DatabaseType>) -> sqlx::Result<()> {
